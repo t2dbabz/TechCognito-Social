@@ -7,23 +7,28 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.tunde.techcognitosocial.R
 import com.tunde.techcognitosocial.databinding.FragmentRegisterBinding
 import com.tunde.techcognitosocial.util.FieldValidators.isStringContainNumber
 import com.tunde.techcognitosocial.util.FieldValidators.isStringLowerAndUpperCase
 import com.tunde.techcognitosocial.util.FieldValidators.isValidEmail
+import com.tunde.techcognitosocial.util.Resource
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class RegisterFragment : Fragment() {
 
     private lateinit var binding: FragmentRegisterBinding
+    private val viewModel: AuthViewModel by activityViewModels()
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentRegisterBinding.inflate(inflater, container, false)
         // Inflate the layout for this fragment
         return binding.root
@@ -37,15 +42,47 @@ class RegisterFragment : Fragment() {
         binding.createAccountButton.setOnClickListener {
             hasCompletedRegistration()
         }
+
+        viewModel.userRegistrationStatus.observe(viewLifecycleOwner) { result ->
+            when(result) {
+                is Resource.Loading -> {
+                    Toast.makeText(requireActivity(), "Loading", Toast.LENGTH_SHORT).show()
+                }
+
+                is Resource.Success -> {
+
+                    val fullName = binding.fullNameEditTextField.text.toString().trim()
+                    val userName = binding.usernameEditTextField.text.toString().trim()
+                    val emailAddress = binding.emailAddressEditTextField.text.toString().trim()
+                    val userId = result.data?.user?.uid!!
+
+
+                    viewModel.createUserInDatabase(userId, fullName, userName, emailAddress)
+                    Toast.makeText(requireActivity(), "Registration Successful", Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+                }
+
+                is  Resource.Error -> {
+                    Toast.makeText(requireActivity(), result.message, Toast.LENGTH_SHORT).show()
+                }
+             }
+        }
     }
 
     private fun hasCompletedRegistration() {
         if (isValidated()) {
-            findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+            val emailAddress = binding.emailAddressEditTextField.text.toString().trim()
+            val password = binding.passwordEditTextField.text.toString().trim()
+
+            viewModel.registerNewUser(emailAddress, password)
         } else {
+
+            Toast.makeText(requireActivity(), "Please Complete into details", Toast.LENGTH_SHORT).show()
 
         }
     }
+
+
 
 
     private fun isValidated(): Boolean =

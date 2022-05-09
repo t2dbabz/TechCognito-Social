@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "22983155161",
+    "project_id": "techcognito-social",
+    "storage_bucket": "techcognito-social.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:22983155161:android:40affeeb8664ce28f80dc8",
+        "android_client_info": {
+          "package_name": "com.tunde.techcognitosocial"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "22983155161-8h84p86ti9gmpdotv6p720ce1si2jhjs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tunde.techcognitosocial",
+            "certificate_hash": "f0e0f7f7f5feb1642fe6ce44055b592c9108dc74"
+          }
+        },
+        {
+          "client_id": "22983155161-ah5hpuphk8q4i9cr7i5q8h23eh95q8q6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCScbP73EjFh_FjEpLhY9H9Epsthbz7Wyw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "22983155161-ah5hpuphk8q4i9cr7i5q8h23eh95q8q6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

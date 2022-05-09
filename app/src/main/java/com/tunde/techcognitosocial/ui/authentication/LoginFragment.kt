@@ -8,19 +8,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.tunde.techcognitosocial.R
 import com.tunde.techcognitosocial.databinding.FragmentLoginBinding
 import com.tunde.techcognitosocial.util.FieldValidators
+import com.tunde.techcognitosocial.util.Resource
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginBinding
+    private val viewModel: AuthViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
@@ -39,6 +44,25 @@ class LoginFragment : Fragment() {
         binding.createAccountButton.setOnClickListener {
             confirmLoginDetails()
         }
+
+        viewModel.userSignInStatus.observe(viewLifecycleOwner) { result ->
+
+            when(result) {
+                is Resource.Loading -> {
+                    Toast.makeText(requireActivity(), "Loading", Toast.LENGTH_SHORT).show()
+                }
+
+                is Resource.Success -> {
+                    Toast.makeText(requireActivity(), "Login Successful", Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.action_loginFragment_to_main_navigation)
+                }
+
+                is  Resource.Error -> {
+                    Toast.makeText(requireActivity(), result.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+
+        }
     }
 
     private fun setupListeners() {
@@ -49,8 +73,9 @@ class LoginFragment : Fragment() {
 
     private fun confirmLoginDetails() {
         if (isValidated()) {
-            findNavController().navigate(R.id.action_loginFragment_to_main_navigation)
-            activity?.finish()
+            val emailAddress = binding.emailAddressEditTextField.text.toString().trim()
+            val password = binding.passwordEditTextField.text.toString().trim()
+            viewModel.signInUser(emailAddress, password)
         } else {
             Toast.makeText(requireActivity(), "Incorrect Email or Password", Toast.LENGTH_SHORT).show()
         }
