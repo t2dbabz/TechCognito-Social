@@ -1,4 +1,27 @@
 <resources>
     <string name="app_name">TechCognito Social</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dummy_text">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+        Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s,
+        when an unknown printer took a galley of type and scrambled it to make a type specimen book.</string>
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="profile">Profile</string>
+    <string name="settings">settings</string>
+    <string name="let_s_get_started">Let\'s Get Started</string>
+    <string name="create_an_account">Create an Account</string>
+    <string name="full_name">Full Name</string>
+    <string name="username">Username</string>
+    <string name="email_address">Email Address</string>
+    <string name="password">Password</string>
+    <string name="create_account">Create Account</string>
+    <string name="login">Login</string>
+    <string name="welcome">Welcome</string>
+    <string name="please_login_to_start">Please login to start</string>
+    <string name="don_t_have_an_account">Don\'t Have an Account?</string>
+    <string name="sign_up">Sign up</string>
+    <string name="post">Post</string>
+    <string name="write_your_post">Write your post</string>
+    <string name="comment">Comment</string>
+    <string name="post_your_comment">Post your comment</string>
 </resources>

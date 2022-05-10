@@ -49,15 +49,17 @@ class LoginFragment : Fragment() {
 
             when(result) {
                 is Resource.Loading -> {
-                    Toast.makeText(requireActivity(), "Loading", Toast.LENGTH_SHORT).show()
+                    binding.loginProgressBar.visibility = View.VISIBLE
                 }
 
                 is Resource.Success -> {
+                    binding.loginProgressBar.visibility = View.INVISIBLE
                     Toast.makeText(requireActivity(), "Login Successful", Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.action_loginFragment_to_main_navigation)
+                    findNavController().navigate(R.id.action_loginFragment_to_mainActivity)
                 }
 
                 is  Resource.Error -> {
+                    binding.loginProgressBar.visibility = View.INVISIBLE
                     Toast.makeText(requireActivity(), result.message, Toast.LENGTH_SHORT).show()
                 }
             }
