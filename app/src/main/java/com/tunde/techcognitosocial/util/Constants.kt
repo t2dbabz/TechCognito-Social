@@ -4,6 +4,7 @@ object Constants {
 
     //References
     const val USERS_REF = "users"
+    const val POST_REF = "posts"
 
 
     //Fields
@@ -17,7 +18,6 @@ object Constants {
     const val CREATED_AT = "createdAt"
     const val FOLLOWERS = "followers"
     const val FOLLOWING = "following"
-
 
 
 }

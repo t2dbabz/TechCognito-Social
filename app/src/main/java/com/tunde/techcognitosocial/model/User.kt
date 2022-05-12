@@ -2,16 +2,16 @@ package com.tunde.techcognitosocial.model
 
 import java.util.*
 
-data class User(
-    val userId: String,
-    val userName: String,
-    val fullName: String,
-    val email: String,
-    val profilePictureUrl: String? = null,
-    val userBio: String ?= null,
-    val location: String? = null,
+data class User (
+    var userId: String? = null,
+    var username: String? = null,
+    var fullName: String? = null,
+    var email: String? = null,
+    var photoUrl: String? = null,
+    var userBio: String ?= null,
+    var location: String? = null,
     val createdAt: Date? = null,
-    var followers: List<String> = listOf(),
-    var following: List<String> = listOf(),
+    var followers: List<String>? = null,
+    var following: List<String>? = null,
 
 )

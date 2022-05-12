@@ -1,4 +1,4 @@
-package com.tunde.techcognitosocial.ui.main
+package com.tunde.techcognitosocial.ui.main.postDetail
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
