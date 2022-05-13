@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,9 +8,9 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/userProfilePicImageView"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="16dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:background="@color/white"
         android:scaleType="centerCrop"
@@ -23,6 +24,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:textColor="#101010"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/userProfilePicImageView"
         app:layout_constraintTop_toTopOf="@+id/userProfilePicImageView"
         tools:text="Owoleke Babatunde" />
@@ -31,9 +35,10 @@
         android:id="@+id/postTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="16dp"
         android:maxLines="5"
+        android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/commentFullNameTextView"
@@ -45,6 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/commentFullNameTextView"
         app:layout_constraintStart_toEndOf="@+id/commentFullNameTextView"
         app:layout_constraintTop_toTopOf="@+id/commentFullNameTextView"
@@ -52,11 +58,11 @@
 
     <ImageView
         android:id="@+id/commentImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/divider"
         app:layout_constraintEnd_toStartOf="@+id/likePostImageView"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -65,8 +71,8 @@
 
     <ImageView
         android:id="@+id/likePostImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         app:layout_constraintEnd_toStartOf="@+id/sharePostImageView"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/commentImageView"
@@ -75,8 +81,8 @@
 
     <ImageView
         android:id="@+id/sharePostImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/likePostImageView"
@@ -88,6 +94,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/commentImageView"
         app:layout_constraintStart_toEndOf="@+id/commentImageView"
         app:layout_constraintTop_toTopOf="@+id/commentImageView"
@@ -98,9 +105,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/likePostImageView"
         app:layout_constraintStart_toEndOf="@+id/likePostImageView"
         app:layout_constraintTop_toTopOf="@+id/likePostImageView"
         tools:text="100" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/likePostImageView" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

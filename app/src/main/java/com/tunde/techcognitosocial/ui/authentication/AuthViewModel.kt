@@ -32,7 +32,6 @@ class AuthViewModel @Inject constructor(
             _userRegistrationStatus.value = Resource.Loading()
             try {
                 val result = authRepository.registerNewUser(emailAddress, password)
-
                 _userRegistrationStatus.value = result
             } catch (e: Exception) {
                 Resource.Error(e.message ?: "Unable to Create account", data = null)
@@ -60,7 +59,7 @@ class AuthViewModel @Inject constructor(
 
           val user = User(
               userId = userId,
-              userName = userName,
+              username = userName,
               fullName = fullName,
               email = emailAddress,
           )

@@ -17,15 +17,12 @@ class HomeViewModel @Inject constructor(
     private val mainRepository: MainRepository
 ): ViewModel() {
 
-    private val _posts = MutableLiveData<Resource<List<Post>>>()
-    val post : LiveData<Resource<List<Post>>> = _posts
+    val post : LiveData<List<Post>> = mainRepository.getPosts()
 
 
-     fun getPosts() {
-         _posts.value = Resource.Loading()
+    fun toggleLike(post: Post) {
         viewModelScope.launch {
-            val posts = mainRepository.getPosts()
-            _posts.value = posts
+            mainRepository.toggleLikePost(post)
         }
     }
 }

@@ -19,5 +19,12 @@ object Constants {
     const val FOLLOWERS = "followers"
     const val FOLLOWING = "following"
 
+    //Post Fields
+    const val  NUM_COMMENTS = "numComments"
+    const val NUM_LIKES = "numLikes"
+    const val LIKED_BY = "likedBy"
+    const val DATE_CREATED = "dateCreated"
+
+
 
 }

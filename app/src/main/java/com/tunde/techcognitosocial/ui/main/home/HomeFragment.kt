@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
@@ -17,7 +18,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.tunde.techcognitosocial.R
 import com.tunde.techcognitosocial.databinding.FragmentHomeBinding
 import com.tunde.techcognitosocial.ui.main.adapter.PostAdapter
@@ -48,7 +51,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getPosts()
+       // viewModel.getPosts()
 
         adapter = PostAdapter()
 
@@ -62,22 +65,15 @@ class HomeFragment : Fragment() {
         Log.e("Home Fragment", "OnViewCreated called")
 
 
-
         viewModel.post.observe(viewLifecycleOwner) { result ->
-            when(result) {
-                is Resource.Loading -> {
+            adapter.submitList(result)
+        }
 
-                }
 
-                is Resource.Success -> {
-                    adapter.submitList(result.data)
-                }
 
-                is Resource.Error -> {
-                    Toast.makeText(requireActivity(), result.message, Toast.LENGTH_SHORT).show()
-                    Log.e("Home Fragment", result.message.toString())
-                }
-            }
+        adapter.setOnLikeClickListener {post, position ->
+            adapter.notifyItemChanged(position)
+            viewModel.toggleLike(post)
         }
 
     }

@@ -1,5 +1,7 @@
 package com.tunde.techcognitosocial.model
 
+import com.google.firebase.firestore.Exclude
+
 data class Post(
     val documentId: String? = null,
     val authorId: String? = null,
@@ -8,5 +10,5 @@ data class Post(
     val numLikes: Long? = null,
     val likedBy:List<String>? = null,
     val author: User? = null,
-    val dateCreated: Long? = null
+    val dateCreated: Long? = null,
 )

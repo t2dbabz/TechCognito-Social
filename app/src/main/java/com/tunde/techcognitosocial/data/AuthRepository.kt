@@ -60,17 +60,17 @@ class AuthRepository @Inject constructor(
             try {
                 val data = mapOf(
                     USER_ID to user.userId,
-                    USERNAME to user.userName,
+                    USERNAME to user.username,
                     FULL_NAME to user.fullName,
                     EMAIL to user.email,
-                    PHOTO_URL to user.profilePictureUrl,
+                    PHOTO_URL to user.photoUrl,
                     USER_BIO to user.userBio,
                     LOCATION to user.location,
                     CREATED_AT to FieldValue.serverTimestamp(),
                     FOLLOWING to user.following,
                     FOLLOWERS to user.followers
                 )
-                fireBaseFirestore.collection(USERS_REF).document(user.userId).set(data).await()
+                fireBaseFirestore.collection(USERS_REF).document(user.userId!!).set(data).await()
             } catch (e: Exception) {
                 Log.e("Exception", "Could not create user in database:${e.localizedMessage}")
             }
