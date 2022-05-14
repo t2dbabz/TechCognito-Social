@@ -6,21 +6,34 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.google.firebase.auth.FirebaseAuth
+import com.tunde.techcognitosocial.R
 import com.tunde.techcognitosocial.databinding.CommentListItemBinding
 import com.tunde.techcognitosocial.databinding.PostListItemBinding
 import com.tunde.techcognitosocial.model.Comment
 import com.tunde.techcognitosocial.model.Post
 import com.tunde.techcognitosocial.util.Constants
 
-class CommentAdapter(): ListAdapter<Comment, CommentAdapter.CommentViewHolder>(DiffCallback) {
+class CommentAdapter(private val onLikeCLicked: (Comment) -> Unit): ListAdapter<Comment, CommentAdapter.CommentViewHolder>(DiffCallback) {
 
-    class CommentViewHolder(val binding: CommentListItemBinding): RecyclerView.ViewHolder(binding.root) {
+   inner class CommentViewHolder(val binding: CommentListItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(comment: Comment) {
             binding.commentFullNameTextView.text = comment.author?.fullName
             binding.commentUserNameTextView.text = comment.author?.username
             binding.userProfilePicImageView.load(Constants.getProfileImageUrl(comment.authorId!!))
             binding.commentTextView.text = comment.commentText
             binding.commentNumLikesTextView.text = comment.numLikes.toString()
+
+            val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+            if (comment.likedBy?.contains(currentUserId) == true) {
+                binding.likeCommentImageView.setImageResource(R.drawable.ic_heart_fill)
+            } else {
+                binding.likeCommentImageView.setImageResource(R.drawable.ic_heart_line)
+            }
+
+            binding.likeCommentImageView.setOnClickListener {
+                onLikeCLicked(comment)
+            }
         }
     }
 

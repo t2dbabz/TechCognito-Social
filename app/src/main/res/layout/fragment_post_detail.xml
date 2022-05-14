@@ -94,9 +94,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider1"
-        tools:text="7 Comments" />
+        tools:text="7" />
 
     <TextView
         android:id="@+id/numLikesTextView"
@@ -104,9 +106,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintStart_toEndOf="@+id/numCommentsTextView"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/commentsLabel"
         app:layout_constraintTop_toBottomOf="@+id/divider1"
-        tools:text="60 Likes" />
+        tools:text="60" />
 
     <View
         android:id="@+id/divider2"
@@ -173,6 +177,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider3"
         tools:listitem="@layout/comment_list_item"/>
+
+    <TextView
+        android:id="@+id/commentsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/comments"
+        app:layout_constraintBottom_toBottomOf="@+id/numCommentsTextView"
+        app:layout_constraintStart_toEndOf="@+id/numCommentsTextView"
+        app:layout_constraintTop_toTopOf="@+id/numCommentsTextView" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/likes"
+        app:layout_constraintBottom_toBottomOf="@+id/numLikesTextView"
+        app:layout_constraintStart_toEndOf="@+id/numLikesTextView"
+        app:layout_constraintTop_toTopOf="@+id/numLikesTextView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

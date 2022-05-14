@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tunde.techcognitosocial.data.MainRepository
+import com.tunde.techcognitosocial.model.Comment
 import com.tunde.techcognitosocial.model.Post
 import com.tunde.techcognitosocial.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,4 +28,10 @@ class PostDetailViewModel @Inject constructor(val mainRepository: MainRepository
     }
 
     fun getPostComments(postId: String) = mainRepository.getPostComment(postId)
+
+    fun toggleLikeComment(comment: Comment) {
+        viewModelScope.launch {
+            mainRepository.toggleLikeComment(comment)
+        }
+    }
 }

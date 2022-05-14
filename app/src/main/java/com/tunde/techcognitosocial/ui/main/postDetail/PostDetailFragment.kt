@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -73,7 +74,11 @@ class PostDetailFragment : Fragment() {
             getPostComments(postId)
         }
 
-        commentAdapter = CommentAdapter()
+        commentAdapter = CommentAdapter { comment ->
+
+            viewModel.toggleLikeComment(comment)
+            Toast.makeText(requireContext(), "Like Clicked", Toast.LENGTH_SHORT).show()
+        }
 
         binding.commentsRecyclerView.apply {
             adapter = commentAdapter

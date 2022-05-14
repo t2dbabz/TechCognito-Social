@@ -12,6 +12,7 @@ import com.tunde.techcognitosocial.model.User
 import com.tunde.techcognitosocial.util.Constants.COMMENT_REF
 import com.tunde.techcognitosocial.util.Constants.DATE_CREATED
 import com.tunde.techcognitosocial.util.Constants.LIKED_BY
+import com.tunde.techcognitosocial.util.Constants.NUM_COMMENTS
 import com.tunde.techcognitosocial.util.Constants.NUM_LIKES
 import com.tunde.techcognitosocial.util.Constants.POST_REF
 import com.tunde.techcognitosocial.util.Constants.USERS_REF
@@ -74,21 +75,35 @@ class MainRepository @Inject constructor(
 
     suspend fun createComment(postId: String, commentText: String): Resource<Any> = withContext(Dispatchers.IO){
         return@withContext  try {
+
             val uid = firebaseAuth.currentUser?.uid as String
             val commentId = UUID.randomUUID().toString()
             Log.e("Repository", postId)
             val currentUser = getCurrentUser(uid).data!!
-            
-            val comment = Comment (
-                documentId = commentId,
-                authorId = uid,
-                commentText = commentText,
-                numLikes = 0,
-                dateCreated = System.currentTimeMillis(),
-                author = currentUser
-            )
+            fireBaseFirestore.runTransaction { transaction ->
+                val postRef = fireBaseFirestore.collection(POST_REF).document(postId)
 
-            postRef.document(postId).collection(COMMENT_REF).document(commentId).set(comment).await()
+                val numComments = transaction.get(postRef).getLong(NUM_COMMENTS)?.plus(1)
+                transaction.update(postRef, NUM_COMMENTS, numComments)
+
+                val comment = Comment (
+                    documentId = commentId,
+                    authorId = uid,
+                    postId = postId,
+                    commentText = commentText,
+                    numLikes = 0,
+                    dateCreated = System.currentTimeMillis(),
+                    author = currentUser
+                )
+
+                val commentRef = fireBaseFirestore.collection(POST_REF).document(postId).collection(COMMENT_REF)
+                    .document(commentId)
+
+                transaction.set(commentRef, comment)
+
+            }.await()
+
+
             Resource.Success(Any())
 
         } catch (e: Exception) {
@@ -139,6 +154,45 @@ class MainRepository @Inject constructor(
                     val numLikes = transaction.get(postRef).getLong(NUM_LIKES)?.plus(1)
                     transaction.update(
                         postRef,
+                        LIKED_BY,
+                        FieldValue.arrayUnion(userId),
+                        NUM_LIKES,
+                        numLikes
+                    )
+                    isLiked = true
+                }
+            }.await()
+            Resource.Success(isLiked)
+        } catch (e: Exception) {
+            Log.e("Repository111", e.message.toString())
+            Resource.Error(e.message ?: "Post could not be liked : ${e.localizedMessage}")
+        }
+    }
+
+    suspend fun toggleLikeComment(comment: Comment) : Resource<Boolean> = withContext(Dispatchers.IO) {
+        return@withContext try {
+            var isLiked = false
+            fireBaseFirestore.runTransaction { transaction ->
+                val userId = firebaseAuth.currentUser?.uid
+                val commentRef = fireBaseFirestore.collection(POST_REF).document(comment.postId!!).collection(COMMENT_REF)
+                    .document(comment.documentId!!)
+
+                val currentLikes =  transaction.get(commentRef).toObject(Comment::class.java)?.likedBy ?: listOf()
+
+                if (currentLikes.contains(userId)) {
+                    val numLikes = transaction.get(commentRef).getLong(NUM_LIKES)?.minus(1)
+
+                    transaction.update(
+                        commentRef,
+                        LIKED_BY,
+                        FieldValue.arrayRemove(userId),
+                        NUM_LIKES,
+                        numLikes
+                    )
+                } else {
+                    val numLikes = transaction.get(commentRef).getLong(NUM_LIKES)?.plus(1)
+                    transaction.update(
+                        commentRef,
                         LIKED_BY,
                         FieldValue.arrayUnion(userId),
                         NUM_LIKES,

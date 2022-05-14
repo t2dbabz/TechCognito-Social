@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.google.firebase.auth.FirebaseAuth
 import com.tunde.techcognitosocial.R
 import com.tunde.techcognitosocial.databinding.PostListItemBinding
 import com.tunde.techcognitosocial.model.Post
@@ -28,8 +29,9 @@ class PostAdapter(val onPostClicked: (Post) -> Unit): ListAdapter<Post, PostAdap
             binding.numLikesTextView.text = post.numLikes.toString()
 
 
+            val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
 
-            if (post.likedBy?.contains(post.authorId) == true) {
+            if (post.likedBy?.contains(currentUserId) == true) {
                 binding.likePostImageView.setImageResource(R.drawable.ic_heart_fill)
             } else {
                 binding.likePostImageView.setImageResource(R.drawable.ic_heart_line)
