@@ -5,8 +5,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.ktx.toObject
+import com.tunde.techcognitosocial.model.Comment
 import com.tunde.techcognitosocial.model.Post
 import com.tunde.techcognitosocial.model.User
+import com.tunde.techcognitosocial.util.Constants.COMMENT_REF
 import com.tunde.techcognitosocial.util.Constants.DATE_CREATED
 import com.tunde.techcognitosocial.util.Constants.LIKED_BY
 import com.tunde.techcognitosocial.util.Constants.NUM_LIKES
@@ -69,11 +72,49 @@ class MainRepository @Inject constructor(
         }
     }
 
+    suspend fun createComment(postId: String, commentText: String): Resource<Any> = withContext(Dispatchers.IO){
+        return@withContext  try {
+            val uid = firebaseAuth.currentUser?.uid as String
+            val commentId = UUID.randomUUID().toString()
+            Log.e("Repository", postId)
+            val currentUser = getCurrentUser(uid).data!!
+            
+            val comment = Comment (
+                documentId = commentId,
+                authorId = uid,
+                commentText = commentText,
+                numLikes = 0,
+                dateCreated = System.currentTimeMillis(),
+                author = currentUser
+            )
+
+            postRef.document(postId).collection(COMMENT_REF).document(commentId).set(comment).await()
+            Resource.Success(Any())
+
+        } catch (e: Exception) {
+            Resource.Error(e.message ?: "Could not send your post: ${e.localizedMessage}")
+
+        }
+    }
+
      fun getPosts() =
          fireBaseFirestore.collection(POST_REF)
              .orderBy(DATE_CREATED, Query.Direction.DESCENDING)
              .livedata(Post::class.java)
 
+    suspend fun getPostDetails(postId: String): Resource<Post> = withContext(Dispatchers.IO) {
+        return@withContext try {
+            val post = postRef.document(postId).get().await().toObject(Post::class.java) as Post
+            Resource.Success(post)
+        } catch (e: Exception) {
+            Resource.Error(e.message?: "Could get ")
+        }
+    }
+
+    fun getPostComment(postId: String) =
+        postRef.document(postId).collection(COMMENT_REF)
+            .orderBy(DATE_CREATED, Query.Direction.DESCENDING)
+            .livedata(Comment::class.java)
 
 
     suspend fun toggleLikePost(post: Post) : Resource<Boolean> = withContext(Dispatchers.IO) {
@@ -112,6 +153,8 @@ class MainRepository @Inject constructor(
             Resource.Error(e.message ?: "Post could not be liked : ${e.localizedMessage}")
         }
     }
+
+
 
 
 }

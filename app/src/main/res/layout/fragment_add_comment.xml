@@ -57,7 +57,7 @@
         tools:text="Replying to \@t2dbabz" />
 
     <EditText
-        android:id="@+id/editTextTextMultiLine"
+        android:id="@+id/commentEditText"
         android:layout_width="0dp"
         android:layout_height="150dp"
         android:layout_marginTop="8dp"

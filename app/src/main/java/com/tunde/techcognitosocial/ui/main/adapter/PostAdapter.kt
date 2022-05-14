@@ -9,10 +9,11 @@ import coil.load
 import com.tunde.techcognitosocial.R
 import com.tunde.techcognitosocial.databinding.PostListItemBinding
 import com.tunde.techcognitosocial.model.Post
+import com.tunde.techcognitosocial.util.Constants
 import java.math.BigInteger
 import java.security.MessageDigest
 
-class PostAdapter(): ListAdapter<Post, PostAdapter.PostViewHolder>(DiffCallback) {
+class PostAdapter(val onPostClicked: (Post) -> Unit): ListAdapter<Post, PostAdapter.PostViewHolder>(DiffCallback) {
 
     private var onLikeClickListener: ((Post, Int) -> Unit)? = null
     private var onCommentClickListener: ((Post) -> Unit)? = null
@@ -23,7 +24,7 @@ class PostAdapter(): ListAdapter<Post, PostAdapter.PostViewHolder>(DiffCallback)
             binding.postTextView.text = post.postText
             binding.commentFullNameTextView.text = post.author?.fullName
             binding.commentUserNameTextView.text = itemView.context.getString(R.string.post_username, post.author?.username)
-            binding.userProfilePicImageView.load(getProfileImageUrl(post.authorId!!))
+            binding.userProfilePicImageView.load(Constants.getProfileImageUrl(post.authorId!!))
             binding.numLikesTextView.text = post.numLikes.toString()
 
 
@@ -32,6 +33,10 @@ class PostAdapter(): ListAdapter<Post, PostAdapter.PostViewHolder>(DiffCallback)
                 binding.likePostImageView.setImageResource(R.drawable.ic_heart_fill)
             } else {
                 binding.likePostImageView.setImageResource(R.drawable.ic_heart_line)
+            }
+
+            itemView.setOnClickListener {
+                onPostClicked(post)
             }
 
 
@@ -54,13 +59,6 @@ class PostAdapter(): ListAdapter<Post, PostAdapter.PostViewHolder>(DiffCallback)
             }
         }
 
-        private fun getProfileImageUrl(username: String): String {
-            val digest = MessageDigest.getInstance("MD5")
-            val hash = digest.digest(username.toByteArray())
-            val bigInt = BigInteger(hash)
-            val hex = bigInt.abs().toString(16)
-            return "https://www.gravatar.com/avatar/$hex?d=identicon"
-        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
@@ -75,6 +73,10 @@ class PostAdapter(): ListAdapter<Post, PostAdapter.PostViewHolder>(DiffCallback)
 
     fun setOnLikeClickListener(listener: (Post, Int) -> Unit) {
         onLikeClickListener = listener
+    }
+
+    fun setOnCommentClickListener(listener: (Post) -> Unit) {
+        onCommentClickListener = listener
     }
 
     companion object DiffCallback : DiffUtil.ItemCallback<Post>() {

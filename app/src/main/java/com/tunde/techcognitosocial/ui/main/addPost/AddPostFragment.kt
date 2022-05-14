@@ -21,6 +21,7 @@ class AddPostFragment : Fragment() {
     private lateinit var binding: FragmentAddPostBinding
     private val viewModel: AddPostViewModel by viewModels()
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,6 +37,8 @@ class AddPostFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
 
         binding.addCommentButton.setOnClickListener {
             val postText = binding.addPostEditTextView.text.toString().trim()
