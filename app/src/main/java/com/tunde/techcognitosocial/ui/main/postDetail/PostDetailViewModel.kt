@@ -18,6 +18,9 @@ class PostDetailViewModel @Inject constructor(val mainRepository: MainRepository
     private val _postDetail = MutableLiveData<Resource<Post>>()
             val postDetail : LiveData<Resource<Post>> = _postDetail
 
+    private val _likePostStatus = MutableLiveData<Resource<Boolean>>()
+    val likePostStatus : LiveData<Resource<Boolean>> = _likePostStatus
+
     fun getPostDetails(postId: String) {
         _postDetail.value = Resource.Loading()
         viewModelScope.launch {
@@ -32,6 +35,13 @@ class PostDetailViewModel @Inject constructor(val mainRepository: MainRepository
     fun toggleLikeComment(comment: Comment) {
         viewModelScope.launch {
             mainRepository.toggleLikeComment(comment)
+        }
+    }
+
+    fun toggleLike(post: Post) {
+        viewModelScope.launch {
+        val result =  mainRepository.toggleLikePost(post)
+            _likePostStatus.value = result
         }
     }
 }

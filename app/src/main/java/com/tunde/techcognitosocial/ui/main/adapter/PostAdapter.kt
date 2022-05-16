@@ -20,6 +20,7 @@ class PostAdapter(val onPostClicked: (Post) -> Unit): ListAdapter<Post, PostAdap
     private var onCommentClickListener: ((Post) -> Unit)? = null
     private var onShareClickListener: ((Post )-> Unit)? = null
 
+
    inner class PostViewHolder(val binding: PostListItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(post: Post, position: Int) {
             binding.postTextView.text = post.postText
@@ -48,7 +49,7 @@ class PostAdapter(val onPostClicked: (Post) -> Unit): ListAdapter<Post, PostAdap
                 }
             }
 
-            binding.commentImageView.setOnClickListener {
+            binding.commentPostImageView.setOnClickListener {
                 onCommentClickListener?.let { onClick ->
                     onClick(post)
                 }
@@ -89,6 +90,8 @@ class PostAdapter(val onPostClicked: (Post) -> Unit): ListAdapter<Post, PostAdap
         override fun areContentsTheSame(oldItem: Post, newItem: Post): Boolean {
             return oldItem.documentId == newItem.documentId
         }
+
+
     }
 
 

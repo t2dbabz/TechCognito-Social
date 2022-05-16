@@ -57,7 +57,7 @@
         tools:text="\@t2dbabz" />
 
     <ImageView
-        android:id="@+id/commentImageView"
+        android:id="@+id/commentPostImageView"
         android:layout_width="18dp"
         android:layout_height="18dp"
         android:layout_marginTop="16dp"
@@ -79,8 +79,8 @@
         android:focusable="true"
         app:layout_constraintEnd_toStartOf="@+id/sharePostImageView"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/commentImageView"
-        app:layout_constraintTop_toTopOf="@+id/commentImageView"
+        app:layout_constraintStart_toEndOf="@+id/commentPostImageView"
+        app:layout_constraintTop_toTopOf="@+id/commentPostImageView"
         app:srcCompat="@drawable/ic_heart_line" />
 
     <ImageView
@@ -101,9 +101,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/commentImageView"
-        app:layout_constraintStart_toEndOf="@+id/commentImageView"
-        app:layout_constraintTop_toTopOf="@+id/commentImageView"
+        app:layout_constraintBottom_toBottomOf="@+id/commentPostImageView"
+        app:layout_constraintStart_toEndOf="@+id/commentPostImageView"
+        app:layout_constraintTop_toTopOf="@+id/commentPostImageView"
         tools:text="24" />
 
     <TextView

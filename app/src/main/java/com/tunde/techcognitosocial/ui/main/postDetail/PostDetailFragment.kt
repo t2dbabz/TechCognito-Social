@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
+import com.google.firebase.auth.FirebaseAuth
 import com.tunde.techcognitosocial.R
 import com.tunde.techcognitosocial.databinding.FragmentPostDetailBinding
 import com.tunde.techcognitosocial.model.Post
@@ -26,6 +27,7 @@ import com.tunde.techcognitosocial.util.Constants.POST_TEXT
 import com.tunde.techcognitosocial.util.Constants.USERNAME
 import com.tunde.techcognitosocial.util.Resource
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class PostDetailFragment : Fragment() {
@@ -34,6 +36,10 @@ class PostDetailFragment : Fragment() {
     private val viewModel: PostDetailViewModel by viewModels()
     private val args: PostDetailFragmentArgs by navArgs()
     private lateinit var commentAdapter: CommentAdapter
+    private var selectedPostId = ""
+    private lateinit var selectedPost: Post
+
+    @Inject lateinit var firebaseAuth: FirebaseAuth
 
 
     override fun onCreateView(
@@ -64,11 +70,16 @@ class PostDetailFragment : Fragment() {
             binding.numLikesTextView.text = arguments?.getLong(NUM_LIKES).toString()
             binding.userProfilePicImageView.load(arguments?.getString(AUTHOR_ID)?.let { Constants.getProfileImageUrl(it) })
 
+            selectedPostId = postId
+
+            viewModel.getPostDetails(postId)
+
             getPostComments(postId)
 
         } else {
 
             val postId = args.postId
+            selectedPostId = postId
             println(postId)
             viewModel.getPostDetails(postId)
             getPostComments(postId)
@@ -97,6 +108,13 @@ class PostDetailFragment : Fragment() {
 
                 is Resource.Success -> {
                     bindPostDetails(result.data!!)
+                    selectedPost = result.data
+                    val currentUserId = firebaseAuth.currentUser?.uid
+                    if (selectedPost.likedBy?.contains(currentUserId) == true) {
+                        binding.likePostImageView.setImageResource(R.drawable.ic_heart_fill)
+                    } else {
+                        binding.likePostImageView.setImageResource(R.drawable.ic_heart_line)
+                    }
                 }
 
                 is Resource.Error -> {
@@ -104,6 +122,30 @@ class PostDetailFragment : Fragment() {
                 }
 
             }
+        }
+
+        viewModel.likePostStatus.observe(viewLifecycleOwner){ result ->
+            if (result.data == true){
+                viewModel.getPostDetails(selectedPostId)
+            }
+        }
+
+        binding.commentPostImageView.setOnClickListener {
+
+            findNavController().navigate(PostDetailFragmentDirections.actionPostDetailFragmentToAddCommentFragment(
+                selectedPost.authorId,
+                selectedPost.author?.username,
+                selectedPost.documentId
+            ))
+        }
+
+
+
+
+
+        binding.likePostImageView.setOnClickListener {
+
+            viewModel.toggleLike(selectedPost)
         }
 
 

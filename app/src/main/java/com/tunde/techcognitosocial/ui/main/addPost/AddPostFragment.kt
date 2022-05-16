@@ -8,11 +8,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import coil.load
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 import com.tunde.techcognitosocial.R
 import com.tunde.techcognitosocial.databinding.FragmentAddPostBinding
+import com.tunde.techcognitosocial.util.Constants
 import com.tunde.techcognitosocial.util.Resource
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -20,6 +24,7 @@ class AddPostFragment : Fragment() {
 
     private lateinit var binding: FragmentAddPostBinding
     private val viewModel: AddPostViewModel by viewModels()
+    @Inject lateinit var firebaseAuth: FirebaseAuth
 
 
     override fun onCreateView(
@@ -38,6 +43,8 @@ class AddPostFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val currentUserId = firebaseAuth.currentUser?.uid
+        binding.userProfilePicImageView.load(Constants.getProfileImageUrl(currentUserId!!))
 
 
         binding.addCommentButton.setOnClickListener {
