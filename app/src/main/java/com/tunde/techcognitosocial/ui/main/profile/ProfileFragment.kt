@@ -5,8 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import coil.load
+import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
 import com.tunde.techcognitosocial.R
 import com.tunde.techcognitosocial.databinding.FragmentProfileBinding
@@ -22,7 +24,7 @@ import javax.inject.Inject
 class ProfileFragment : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
-    private val viewModel: ProfileViewModel by viewModels()
+    private val viewModel: ProfileViewModel by activityViewModels()
     @Inject lateinit var firebaseAuth: FirebaseAuth
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +33,21 @@ class ProfileFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentProfileBinding.inflate(inflater, container, false)
 
+        val fragmentList = arrayListOf<Fragment>(
+            PostFragment(),
+        )
+
+        val adapter = ProfileViewPagerAdapter(
+            fragmentList,
+            requireActivity().supportFragmentManager,
+            lifecycle
+        )
+
+        binding.viewPager.adapter = adapter
+
+
+
+
 
         return binding.root
     }
@@ -38,6 +55,14 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val tabLayout = binding.tabLayout
+        val viewPager2 = binding.viewPager
+        val tabListName = arrayListOf<String>("Posts")
+
+        TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
+            tab.text = tabListName[position]
+        }.attach()
 
         val currentUserId = firebaseAuth.currentUser?.uid as String
 
@@ -60,6 +85,8 @@ class ProfileFragment : Fragment() {
             }
 
         }
+
+
 
 
 
@@ -95,7 +122,7 @@ class ProfileFragment : Fragment() {
 
     private fun hideProgressBar() {
         binding.apply {
-            binding.profileProgressBar.visibility = View.GONE
+
             userProfilePicImageView.visibility = View.VISIBLE
             profileFullNameTextView.visibility =  View.VISIBLE
             profileUserName.visibility =  View.VISIBLE

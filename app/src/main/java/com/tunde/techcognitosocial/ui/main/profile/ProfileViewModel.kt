@@ -27,5 +27,7 @@ class ProfileViewModel @Inject constructor(val mainRepository: MainRepository): 
             _currentUserData.value = result
         }
     }
+
+    fun getUserPosts(userId: String) = mainRepository.getUserPosts(userId)
 }
 

@@ -9,6 +9,7 @@ import com.google.firebase.firestore.ktx.toObject
 import com.tunde.techcognitosocial.model.Comment
 import com.tunde.techcognitosocial.model.Post
 import com.tunde.techcognitosocial.model.User
+import com.tunde.techcognitosocial.util.Constants.AUTHOR_ID
 import com.tunde.techcognitosocial.util.Constants.COMMENT_REF
 import com.tunde.techcognitosocial.util.Constants.DATE_CREATED
 import com.tunde.techcognitosocial.util.Constants.LIKED_BY
@@ -17,6 +18,7 @@ import com.tunde.techcognitosocial.util.Constants.NUM_LIKES
 import com.tunde.techcognitosocial.util.Constants.POST_REF
 import com.tunde.techcognitosocial.util.Constants.POST_TEXT
 import com.tunde.techcognitosocial.util.Constants.USERS_REF
+import com.tunde.techcognitosocial.util.Constants.USER_ID
 import com.tunde.techcognitosocial.util.QuerySnapshotLiveData
 import com.tunde.techcognitosocial.util.Resource
 import com.tunde.techcognitosocial.util.livedata
@@ -215,6 +217,11 @@ class MainRepository @Inject constructor(
             .livedata(Post::class.java)
 
 
+    fun getUserPosts(userId: String) =
+        fireBaseFirestore.collection(POST_REF)
+            .orderBy(DATE_CREATED, Query.Direction.DESCENDING)
+            .whereEqualTo(AUTHOR_ID, userId)
+            .livedata(Post::class.java)
 
 
 }
