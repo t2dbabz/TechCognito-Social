@@ -15,6 +15,7 @@ import com.tunde.techcognitosocial.util.Constants.LIKED_BY
 import com.tunde.techcognitosocial.util.Constants.NUM_COMMENTS
 import com.tunde.techcognitosocial.util.Constants.NUM_LIKES
 import com.tunde.techcognitosocial.util.Constants.POST_REF
+import com.tunde.techcognitosocial.util.Constants.POST_TEXT
 import com.tunde.techcognitosocial.util.Constants.USERS_REF
 import com.tunde.techcognitosocial.util.QuerySnapshotLiveData
 import com.tunde.techcognitosocial.util.Resource
@@ -207,6 +208,11 @@ class MainRepository @Inject constructor(
             Resource.Error(e.message ?: "Post could not be liked : ${e.localizedMessage}")
         }
     }
+
+    fun searchPosts(searchText: String) =
+        fireBaseFirestore.collection(POST_REF)
+            .whereGreaterThanOrEqualTo(POST_TEXT, searchText)
+            .livedata(Post::class.java)
 
 
 
