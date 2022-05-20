@@ -1,23 +1,30 @@
 package com.tunde.techcognitosocial.data
 
+import android.net.Uri
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.storage.FirebaseStorage
 import com.tunde.techcognitosocial.model.Comment
 import com.tunde.techcognitosocial.model.Post
 import com.tunde.techcognitosocial.model.User
 import com.tunde.techcognitosocial.util.Constants.AUTHOR_ID
 import com.tunde.techcognitosocial.util.Constants.COMMENT_REF
 import com.tunde.techcognitosocial.util.Constants.DATE_CREATED
+import com.tunde.techcognitosocial.util.Constants.FULL_NAME
 import com.tunde.techcognitosocial.util.Constants.LIKED_BY
+import com.tunde.techcognitosocial.util.Constants.LOCATION
 import com.tunde.techcognitosocial.util.Constants.NUM_COMMENTS
 import com.tunde.techcognitosocial.util.Constants.NUM_LIKES
+import com.tunde.techcognitosocial.util.Constants.PHOTO_URL
+import com.tunde.techcognitosocial.util.Constants.POST_ID
 import com.tunde.techcognitosocial.util.Constants.POST_REF
 import com.tunde.techcognitosocial.util.Constants.POST_TEXT
 import com.tunde.techcognitosocial.util.Constants.USERS_REF
+import com.tunde.techcognitosocial.util.Constants.USER_BIO
 import com.tunde.techcognitosocial.util.Constants.USER_ID
 import com.tunde.techcognitosocial.util.QuerySnapshotLiveData
 import com.tunde.techcognitosocial.util.Resource
@@ -32,7 +39,8 @@ import javax.inject.Inject
 @ViewModelScoped
 class MainRepository @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
-    private val fireBaseFirestore: FirebaseFirestore
+    private val fireBaseFirestore: FirebaseFirestore,
+    private val firebaseStorage: FirebaseStorage
 ) {
 
     private val postRef = fireBaseFirestore.collection(POST_REF)
@@ -143,7 +151,7 @@ class MainRepository @Inject constructor(
                 val postRef = fireBaseFirestore.collection(POST_REF).document(post.documentId!!)
                 val currentLikes =  transaction.get(postRef).toObject(Post::class.java)?.likedBy ?: listOf()
 
-                if (currentLikes.contains(post.authorId)) {
+                if (currentLikes.contains(userId)) {
                     val numLikes = transaction.get(postRef).getLong(NUM_LIKES)?.minus(1)
 
                     transaction.update(
@@ -222,6 +230,56 @@ class MainRepository @Inject constructor(
             .orderBy(DATE_CREATED, Query.Direction.DESCENDING)
             .whereEqualTo(AUTHOR_ID, userId)
             .livedata(Post::class.java)
+
+    suspend fun uploadUserProfilePic(imageUri: Uri) : Resource<String> = withContext(Dispatchers.IO) {
+        return@withContext try {
+
+            var photoUrl: String
+            val currentUserId =  firebaseAuth.currentUser?.uid
+            val photoUploadResult = firebaseStorage.getReference(currentUserId!!).putFile(imageUri).await()
+
+             photoUrl = photoUploadResult.metadata?.reference?.downloadUrl?.await().toString()
+
+            Log.e("PhotoUrl", photoUrl)
+
+
+            fireBaseFirestore.runTransaction { transaction->
+                val userRef = fireBaseFirestore.collection(USERS_REF).document(currentUserId)
+
+                transaction.update(userRef, PHOTO_URL, photoUrl)
+
+            }.await()
+
+            Resource.Success(photoUrl)
+
+        } catch (e: Exception) {
+            Log.e("Repository111", e.message.toString())
+            Resource.Error(e.message ?: "Could not upload photo : ${e.localizedMessage}")
+        }
+    }
+
+    suspend fun updateUserProfile(fullName: String, bio: String, location: String): Resource<Boolean> = withContext(Dispatchers.IO) {
+        return@withContext try {
+
+            val currentUserId = firebaseAuth.currentUser?.uid as String
+            fireBaseFirestore.runTransaction { transaction ->
+                val userRef = fireBaseFirestore.collection(USERS_REF).document(currentUserId)
+                transaction.update(
+                    userRef,
+                    FULL_NAME,
+                    fullName,
+                    USER_BIO,
+                    bio,
+                    LOCATION,
+                    location
+                )
+            }.await()
+
+            Resource.Success(true)
+        }catch (e: Exception) {
+            Resource.Error(e.message ?: "Profile Not updated${e.localizedMessage}")
+        }
+    }
 
 
 }

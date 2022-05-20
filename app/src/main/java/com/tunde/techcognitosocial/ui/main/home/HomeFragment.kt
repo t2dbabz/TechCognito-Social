@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.tunde.techcognitosocial.R
 import com.tunde.techcognitosocial.databinding.FragmentHomeBinding
 import com.tunde.techcognitosocial.ui.main.adapter.PostAdapter
@@ -37,6 +38,7 @@ import com.tunde.techcognitosocial.util.Constants.POST_TEXT
 import com.tunde.techcognitosocial.util.Constants.USERNAME
 import com.tunde.techcognitosocial.util.Resource
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -47,6 +49,8 @@ class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
 
     private lateinit var adapter: PostAdapter
+
+    @Inject lateinit var firebaseAuth: FirebaseAuth
 
 
     override fun onCreateView(
@@ -101,7 +105,7 @@ class HomeFragment : Fragment() {
         adapter.setOnCommentClickListener { post ->
             val postId = post.documentId
             val postAuthorUserName = post.author?.username
-            val userID = FirebaseAuth.getInstance().currentUser?.uid
+            val userID = firebaseAuth.currentUser?.uid
 
             val action = HomeFragmentDirections.actionHomeFragmentToAddCommentFragment(userID, postAuthorUserName, postId)
             findNavController().navigate(action)

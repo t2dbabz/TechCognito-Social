@@ -21,11 +21,34 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.tunde.techcognitosocial.ui.main.profile.ProfileFragment"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_postDetailFragment"
+            app:destination="@id/postDetailFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_addCommentFragment"
+            app:destination="@id/addCommentFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_addPostFragment"
+            app:destination="@id/addPostFragment" />
+    </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.tunde.techcognitosocial.ui.main.search.SearchFragment"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_postDetailFragment"
+            app:destination="@id/postDetailFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_addCommentFragment"
+            app:destination="@id/addCommentFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_addPostFragment"
+            app:destination="@id/addPostFragment" />
+    </fragment>
     <fragment
         android:id="@+id/addCommentFragment"
         android:name="com.tunde.techcognitosocial.ui.main.addComment.AddCommentFragment"
@@ -67,5 +90,13 @@
         <action
             android:id="@+id/action_postDetailFragment_to_addCommentFragment"
             app:destination="@id/addCommentFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.tunde.techcognitosocial.ui.main.profile.EditProfileFragment"
+        tools:layout="@layout/fragment_edit_profile">
+        <action
+            android:id="@+id/action_editProfileFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
 </navigation>

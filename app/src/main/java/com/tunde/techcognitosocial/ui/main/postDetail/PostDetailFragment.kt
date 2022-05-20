@@ -1,6 +1,7 @@
 package com.tunde.techcognitosocial.ui.main.postDetail
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -49,7 +50,7 @@ class PostDetailFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentPostDetailBinding.inflate(inflater, container, false)
         binding.toolbar.setNavigationOnClickListener {
-            findNavController().navigate(R.id.action_postDetailFragment_to_homeFragment)
+            findNavController().navigateUp()
         }
         val postId = args.postId
         println(postId)
@@ -125,10 +126,20 @@ class PostDetailFragment : Fragment() {
         }
 
         viewModel.likePostStatus.observe(viewLifecycleOwner){ result ->
-            if (result.data == true){
-                viewModel.getPostDetails(selectedPostId)
+
+
+            when (result){
+
+                is Resource.Success -> {
+                    viewModel.getPostDetails(selectedPostId)
+                }
+                else -> {}
             }
+
+
+
         }
+
 
         binding.commentPostImageView.setOnClickListener {
 
@@ -140,11 +151,9 @@ class PostDetailFragment : Fragment() {
         }
 
 
-
-
-
         binding.likePostImageView.setOnClickListener {
 
+            Toast.makeText(requireContext(), "Like Clicked", Toast.LENGTH_SHORT).show()
             viewModel.toggleLike(selectedPost)
         }
 

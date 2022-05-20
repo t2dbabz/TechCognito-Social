@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/tunde/StudioProjects/TechCognitoSocial/app/src/main/res/drawable/divider_drawable.xml" value="0.1" />
+        <entry key="..\:/Users/tunde/StudioProjects/TechCognitoSocial/app/src/main/res/drawable/ic_add_photo.xml" value="0.153" />
         <entry key="..\:/Users/tunde/StudioProjects/TechCognitoSocial/app/src/main/res/drawable/ic_heart_fill.xml" value="0.153" />
         <entry key="..\:/Users/tunde/StudioProjects/TechCognitoSocial/app/src/main/res/drawable/ic_heart_line.xml" value="0.153" />
         <entry key="..\:/Users/tunde/StudioProjects/TechCognitoSocial/app/src/main/res/drawable/ic_home.xml" value="0.153" />
@@ -16,16 +17,18 @@
         <entry key="..\:/Users/tunde/StudioProjects/TechCognitoSocial/app/src/main/res/layout/comment_list_item.xml" value="0.33" />
         <entry key="..\:/Users/tunde/StudioProjects/TechCognitoSocial/app/src/main/res/layout/fragment_add_comment.xml" value="0.25" />
         <entry key="..\:/Users/tunde/StudioProjects/TechCognitoSocial/app/src/main/res/layout/fragment_add_post.xml" value="0.33" />
+        <entry key="..\:/Users/tunde/StudioProjects/TechCognitoSocial/app/src/main/res/layout/fragment_edit_profile.xml" value="0.25" />
         <entry key="..\:/Users/tunde/StudioProjects/TechCognitoSocial/app/src/main/res/layout/fragment_home.xml" value="0.25" />
         <entry key="..\:/Users/tunde/StudioProjects/TechCognitoSocial/app/src/main/res/layout/fragment_login.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/tunde/StudioProjects/TechCognitoSocial/app/src/main/res/layout/fragment_post.xml" value="0.19689119170984457" />
         <entry key="..\:/Users/tunde/StudioProjects/TechCognitoSocial/app/src/main/res/layout/fragment_post_detail.xml" value="0.33" />
-        <entry key="..\:/Users/tunde/StudioProjects/TechCognitoSocial/app/src/main/res/layout/fragment_profile.xml" value="0.33" />
+        <entry key="..\:/Users/tunde/StudioProjects/TechCognitoSocial/app/src/main/res/layout/fragment_profile.xml" value="0.22" />
         <entry key="..\:/Users/tunde/StudioProjects/TechCognitoSocial/app/src/main/res/layout/fragment_register.xml" value="0.22" />
         <entry key="..\:/Users/tunde/StudioProjects/TechCognitoSocial/app/src/main/res/layout/fragment_search.xml" value="0.2" />
         <entry key="..\:/Users/tunde/StudioProjects/TechCognitoSocial/app/src/main/res/layout/post_list_item.xml" value="0.5" />
         <entry key="..\:/Users/tunde/StudioProjects/TechCognitoSocial/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/tunde/StudioProjects/TechCognitoSocial/app/src/main/res/menu/home_meun.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/tunde/StudioProjects/TechCognitoSocial/app/src/main/res/menu/profile_menu.xml" value="0.1675929884566054" />
       </map>
     </option>
   </component>

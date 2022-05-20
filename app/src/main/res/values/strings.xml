@@ -33,4 +33,10 @@
     <string name="search_post">Search Posts</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="user_date_joined"> Joined %1$s</string>
+    <string name="enter_full_name">Enter Full Name</string>
+    <string name="bio">Bio</string>
+    <string name="write_your_bio">Write your Bio</string>
+    <string name="location">Location</string>
+    <string name="what_is_your_location">What is your location?</string>
+    <string name="save">Save</string>
 </resources>

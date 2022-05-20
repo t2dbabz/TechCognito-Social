@@ -20,7 +20,12 @@ class CommentAdapter(private val onLikeCLicked: (Comment) -> Unit): ListAdapter<
         fun bind(comment: Comment) {
             binding.commentFullNameTextView.text = comment.author?.fullName
             binding.commentUserNameTextView.text = comment.author?.username
-            binding.userProfilePicImageView.load(Constants.getProfileImageUrl(comment.authorId!!))
+            if (comment.author?.photoUrl != null) {
+                binding.userProfilePicImageView.load(comment.author.photoUrl)
+            } else {
+
+                binding.userProfilePicImageView.load(Constants.getProfileImageUrl(comment.authorId!!))
+            }
             binding.commentTextView.text = comment.commentText
             binding.commentNumLikesTextView.text = comment.numLikes.toString()
 

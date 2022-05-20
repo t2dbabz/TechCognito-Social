@@ -9,19 +9,26 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
 import com.tunde.techcognitosocial.R
 import com.tunde.techcognitosocial.databinding.FragmentSearchBinding
 import com.tunde.techcognitosocial.ui.main.adapter.PostAdapter
+import com.tunde.techcognitosocial.ui.main.profile.ProfileFragmentDirections
+import com.tunde.techcognitosocial.util.Constants
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
 
     private val viewModel: SearchViewModel by viewModels()
     private lateinit var adapter: PostAdapter
+    @Inject lateinit var firebaseAuth: FirebaseAuth
 
     private lateinit var binding: FragmentSearchBinding
     override fun onCreateView(
@@ -37,12 +44,37 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = PostAdapter {
+        adapter = PostAdapter { post ->
+            val bundle = bundleOf(
+                Constants.POST_ID to post.documentId,
+                Constants.AUTHOR_ID to post.authorId,
+                Constants.FULL_NAME to post.author?.fullName,
+                Constants.USERNAME to post.author?.username,
+                Constants.POST_TEXT to post.postText,
+                Constants.DATE_CREATED to post.dateCreated,
+                Constants.NUM_COMMENTS to post.numComments,
+                Constants.NUM_LIKES to post.numLikes
+            )
 
+            findNavController().navigate(R.id.action_searchFragment_to_postDetailFragment, bundle)
         }
 
         binding.searchRecyclerView.adapter = adapter
         binding.searchRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+
+        adapter.setOnLikeClickListener { post, position ->
+            adapter.notifyItemChanged(position)
+            viewModel.toggleLike(post)
+        }
+
+        adapter.setOnCommentClickListener { post ->
+            val postId = post.documentId
+            val postAuthorUserName = post.author?.username
+            val userID = firebaseAuth.currentUser?.uid
+
+            val action = SearchFragmentDirections.actionSearchFragmentToAddCommentFragment(userID, postAuthorUserName, postId)
+            findNavController().navigate(action)
+        }
 
 
         binding.searchView.queryHint = getString(R.string.search_post)

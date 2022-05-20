@@ -23,10 +23,16 @@ class PostAdapter(val onPostClicked: (Post) -> Unit): ListAdapter<Post, PostAdap
 
    inner class PostViewHolder(val binding: PostListItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(post: Post, position: Int) {
+
             binding.postTextView.text = post.postText
             binding.commentFullNameTextView.text = post.author?.fullName
             binding.commentUserNameTextView.text = itemView.context.getString(R.string.post_username, post.author?.username)
-            binding.userProfilePicImageView.load(Constants.getProfileImageUrl(post.authorId!!))
+            if (post.author?.photoUrl != null) {
+                binding.userProfilePicImageView.load(post.author.photoUrl)
+            } else {
+
+                binding.userProfilePicImageView.load(Constants.getProfileImageUrl(post.authorId!!))
+            }
             binding.numLikesTextView.text = post.numLikes.toString()
 
 

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import coil.load
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
@@ -44,10 +45,6 @@ class ProfileFragment : Fragment() {
         )
 
         binding.viewPager.adapter = adapter
-
-
-
-
 
         return binding.root
     }
@@ -87,14 +84,25 @@ class ProfileFragment : Fragment() {
         }
 
 
-
-
-
-
+        binding.toolbar.setOnMenuItemClickListener {
+            when(it.itemId) {
+                R.id.editProfile -> {
+                    findNavController().navigate(R.id.action_profileFragment_to_editProfileFragment)
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     private fun bindUserData(user: User) {
-        binding.userProfilePicImageView.load(Constants.getProfileImageUrl(user.userId!!))
+        if (user.photoUrl != null) {
+            binding.userProfilePicImageView.load(user.photoUrl)
+        } else {
+
+            binding.userProfilePicImageView.load(Constants.getProfileImageUrl(user.userId!!))
+        }
+
         binding .profileFullNameTextView.text = user.fullName
         binding.profileUserName.text = getString(R.string.post_username, user.username)
 
@@ -128,6 +136,11 @@ class ProfileFragment : Fragment() {
             profileUserName.visibility =  View.VISIBLE
             dateIconImageView.visibility = View.VISIBLE
             profileUserDateCreated.visibility = View.VISIBLE
+            profileUserBio.visibility =  View.VISIBLE
+            dateIconImageView.visibility = View.VISIBLE
+            profileUserDateCreated.visibility = View.VISIBLE
+            locationIconImageView.visibility = View.VISIBLE
+            profileUserLocation.visibility = View.VISIBLE
         }
     }
 
@@ -143,6 +156,4 @@ class ProfileFragment : Fragment() {
             profileUserLocation.visibility = View.INVISIBLE
         }
     }
-
-
 }

@@ -36,7 +36,10 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if(destination.id == R.id.addCommentFragment
-                || destination.id == R.id.addPostFragment) {
+                || destination.id == R.id.addPostFragment
+                || destination.id == R.id.editProfileFragment
+                || destination.id == R.id.postDetailFragment
+            ) {
 
                 bottomNavigationView.visibility = View.GONE
             } else {
