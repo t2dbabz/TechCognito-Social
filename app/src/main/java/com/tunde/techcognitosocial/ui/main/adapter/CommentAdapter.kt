@@ -1,5 +1,6 @@
 package com.tunde.techcognitosocial.ui.main.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -7,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.tunde.techcognitosocial.R
 import com.tunde.techcognitosocial.databinding.CommentListItemBinding
 import com.tunde.techcognitosocial.databinding.PostListItemBinding
@@ -18,14 +20,28 @@ class CommentAdapter(private val onLikeCLicked: (Comment) -> Unit): ListAdapter<
 
    inner class CommentViewHolder(val binding: CommentListItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(comment: Comment) {
+
+
+            FirebaseFirestore.getInstance().collection(Constants.USERS_REF)
+                .document(comment.authorId!!).addSnapshotListener { document, exception ->
+
+                    if (exception != null) {
+                        Log.e("Exception", "Could not retrieve Document : ${exception.localizedMessage}")
+                    }
+
+                    val photoUrl = document?.getString(Constants.PHOTO_URL)
+
+                    if (photoUrl != null) {
+                        binding.userProfilePicImageView.load(photoUrl)
+                    } else {
+                        binding.userProfilePicImageView.load(Constants.getProfileImageUrl(comment.authorId))
+                    }
+                }
+
             binding.commentFullNameTextView.text = comment.author?.fullName
             binding.commentUserNameTextView.text = comment.author?.username
-            if (comment.author?.photoUrl != null) {
-                binding.userProfilePicImageView.load(comment.author.photoUrl)
-            } else {
 
-                binding.userProfilePicImageView.load(Constants.getProfileImageUrl(comment.authorId!!))
-            }
+
             binding.commentTextView.text = comment.commentText
             binding.commentNumLikesTextView.text = comment.numLikes.toString()
 

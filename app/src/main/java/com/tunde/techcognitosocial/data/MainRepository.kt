@@ -234,11 +234,11 @@ class MainRepository @Inject constructor(
     suspend fun uploadUserProfilePic(imageUri: Uri) : Resource<String> = withContext(Dispatchers.IO) {
         return@withContext try {
 
-            var photoUrl: String
+
             val currentUserId =  firebaseAuth.currentUser?.uid
             val photoUploadResult = firebaseStorage.getReference(currentUserId!!).putFile(imageUri).await()
 
-             photoUrl = photoUploadResult.metadata?.reference?.downloadUrl?.await().toString()
+            val photoUrl = photoUploadResult.metadata?.reference?.downloadUrl?.await().toString()
 
             Log.e("PhotoUrl", photoUrl)
 

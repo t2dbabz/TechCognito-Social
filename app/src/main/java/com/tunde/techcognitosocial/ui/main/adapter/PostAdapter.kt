@@ -1,5 +1,6 @@
 package com.tunde.techcognitosocial.ui.main.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -7,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.tunde.techcognitosocial.R
 import com.tunde.techcognitosocial.databinding.PostListItemBinding
 import com.tunde.techcognitosocial.model.Post
@@ -27,12 +29,24 @@ class PostAdapter(val onPostClicked: (Post) -> Unit): ListAdapter<Post, PostAdap
             binding.postTextView.text = post.postText
             binding.commentFullNameTextView.text = post.author?.fullName
             binding.commentUserNameTextView.text = itemView.context.getString(R.string.post_username, post.author?.username)
-            if (post.author?.photoUrl != null) {
-                binding.userProfilePicImageView.load(post.author.photoUrl)
-            } else {
 
-                binding.userProfilePicImageView.load(Constants.getProfileImageUrl(post.authorId!!))
-            }
+            FirebaseFirestore.getInstance().collection(Constants.USERS_REF)
+                .document(post.authorId!!).addSnapshotListener { document, exception ->
+
+                    if (exception != null) {
+                        Log.e("Exception", "Could not retrieve Document : ${exception.localizedMessage}")
+                    }
+
+                    val photoUrl = document?.getString(Constants.PHOTO_URL)
+
+                    if (photoUrl != null) {
+                        binding.userProfilePicImageView.load(photoUrl)
+                    } else {
+                        binding.userProfilePicImageView.load(Constants.getProfileImageUrl(post.authorId))
+                    }
+                }
+
+
             binding.numLikesTextView.text = post.numLikes.toString()
 
 
