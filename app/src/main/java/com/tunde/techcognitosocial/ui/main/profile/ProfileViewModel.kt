@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tunde.techcognitosocial.data.AuthRepository
 import com.tunde.techcognitosocial.data.MainRepository
 import com.tunde.techcognitosocial.model.Post
 import com.tunde.techcognitosocial.model.User
@@ -14,7 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor(val mainRepository: MainRepository): ViewModel() {
+class ProfileViewModel @Inject constructor(val mainRepository: MainRepository, val authRepository: AuthRepository): ViewModel() {
 
 
     private val _currentUserData = MutableLiveData<Resource<User>>()
@@ -25,6 +26,9 @@ class ProfileViewModel @Inject constructor(val mainRepository: MainRepository): 
 
     private val _userProfileUpdateStatus = MutableLiveData<Resource<Boolean>>()
     val userProfileUpdateStatus : LiveData<Resource<Boolean>> = _userProfileUpdateStatus
+
+    private val _signOutStatus = MutableLiveData<Resource<Boolean>>()
+    val signOutStatus : LiveData<Resource<Boolean>> = _signOutStatus
 
 
     fun getUserData(userId: String) {
@@ -59,6 +63,14 @@ class ProfileViewModel @Inject constructor(val mainRepository: MainRepository): 
         viewModelScope.launch {
             val result = mainRepository.updateUserProfile(fullName, bio, location)
             _userProfileUpdateStatus.value = result
+        }
+    }
+
+    fun signOutUser() {
+        _signOutStatus.value = Resource.Loading()
+        viewModelScope.launch {
+            val result = authRepository.signOutUser()
+            _signOutStatus.value = result
         }
     }
 

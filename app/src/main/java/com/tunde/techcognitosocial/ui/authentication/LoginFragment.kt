@@ -56,6 +56,7 @@ class LoginFragment : Fragment() {
                     binding.loginProgressBar.visibility = View.INVISIBLE
                     Toast.makeText(requireActivity(), "Login Successful", Toast.LENGTH_SHORT).show()
                     findNavController().navigate(R.id.action_loginFragment_to_mainActivity)
+                    requireActivity().finish()
                 }
 
                 is  Resource.Error -> {

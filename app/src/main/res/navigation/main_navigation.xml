@@ -34,6 +34,9 @@
         <action
             android:id="@+id/action_profileFragment_to_addPostFragment"
             app:destination="@id/addPostFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_authActivity"
+            app:destination="@id/authActivity" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -99,4 +102,9 @@
             android:id="@+id/action_editProfileFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
     </fragment>
+    <activity
+        android:id="@+id/authActivity"
+        android:name="com.tunde.techcognitosocial.AuthActivity"
+        android:label="activity_auth"
+        tools:layout="@layout/activity_auth" />
 </navigation>

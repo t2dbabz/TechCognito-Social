@@ -53,6 +53,17 @@ class AuthRepository @Inject constructor(
         }
     }
 
+    suspend fun signOutUser(): Resource<Boolean> = withContext(Dispatchers.IO) {
+        return@withContext try {
+
+              firebaseAuth.signOut()
+            Resource.Success(true)
+
+        } catch (e: Exception) {
+            Resource.Error(e.message ?: "An Error Occured")
+        }
+    }
+
 
 
     suspend fun createUserInFireStore(user: User) {

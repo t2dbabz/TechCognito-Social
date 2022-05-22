@@ -6,5 +6,10 @@
         app:showAsAction="never"
         android:title="@string/edit_profile" />
 
+    <item
+        android:id="@+id/signOut"
+        app:showAsAction="never"
+        android:title="@string/logout"/>
+
 
 </menu>
