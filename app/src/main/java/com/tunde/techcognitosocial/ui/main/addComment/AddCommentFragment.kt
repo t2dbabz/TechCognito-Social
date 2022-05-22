@@ -41,10 +41,16 @@ class AddCommentFragment : Fragment() {
         val postUserName = args.postAuthorUsername
         val postId = args.postId as String
         val currentUserId = args.authorUid as String
+        val photoUrl = args.userPhotoUrl
 
         binding.replyingTextView.text = getString(R.string.comment_reply, postUserName)
 
-        binding.userProfilePicImageView.load(Constants.getProfileImageUrl(currentUserId))
+        if (photoUrl != null) {
+            binding.userProfilePicImageView.load(photoUrl)
+        } else {
+            binding.userProfilePicImageView.load(Constants.getProfileImageUrl(currentUserId))
+        }
+
 
         binding.addCommentButton.setOnClickListener {
 

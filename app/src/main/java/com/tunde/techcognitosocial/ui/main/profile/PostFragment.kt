@@ -65,12 +65,17 @@ class PostFragment : Fragment() {
             viewModel.toggleLike(post)
         }
 
-        postAdapter.setOnCommentClickListener { post ->
+        postAdapter.setOnCommentClickListener { post, photoUrl ->
             val postId = post.documentId
             val postAuthorUserName = post.author?.username
             val userID = firebaseAuth.currentUser?.uid
 
-            val action = ProfileFragmentDirections.actionProfileFragmentToAddCommentFragment(userID, postAuthorUserName, postId)
+            val action = ProfileFragmentDirections.actionProfileFragmentToAddCommentFragment(
+                userID,
+                postAuthorUserName,
+                postId,
+                photoUrl
+            )
             findNavController().navigate(action)
         }
 

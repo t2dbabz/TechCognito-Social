@@ -6,20 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import android.widget.Toolbar
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.navigateUp
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -50,7 +39,11 @@ class HomeFragment : Fragment() {
 
     private lateinit var adapter: PostAdapter
 
+    private var photoUrl: String? = null
+
     @Inject lateinit var firebaseAuth: FirebaseAuth
+
+    @Inject lateinit var firestore: FirebaseFirestore
 
 
     override fun onCreateView(
@@ -66,6 +59,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val userID = firebaseAuth.currentUser?.uid
         adapter = PostAdapter{ post ->  
             val bundle = bundleOf(
                 POST_ID to post.documentId,
@@ -85,7 +79,7 @@ class HomeFragment : Fragment() {
         binding.postRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
 
         binding.addPostFAB.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_addPostFragment)
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToAddPostFragment(photoUrl) )
         }
 
         Log.e("Home Fragment", "OnViewCreated called")
@@ -102,12 +96,18 @@ class HomeFragment : Fragment() {
             viewModel.toggleLike(post)
         }
 
-        adapter.setOnCommentClickListener { post ->
+        adapter.setOnCommentClickListener { post, photoUrl ->
             val postId = post.documentId
             val postAuthorUserName = post.author?.username
-            val userID = firebaseAuth.currentUser?.uid
 
-            val action = HomeFragmentDirections.actionHomeFragmentToAddCommentFragment(userID, postAuthorUserName, postId)
+
+
+            val action = HomeFragmentDirections.actionHomeFragmentToAddCommentFragment(
+                userID,
+                postAuthorUserName,
+                postId,
+                photoUrl
+            )
             findNavController().navigate(action)
         }
 
@@ -133,6 +133,17 @@ class HomeFragment : Fragment() {
             }
         })
 
+        if (userID != null) {
+            FirebaseFirestore.getInstance().collection(Constants.USERS_REF)
+                .document(userID).addSnapshotListener { document, exception ->
+
+                    if (exception != null) {
+                        Log.e("Exception", "Could not retrieve Document : ${exception.localizedMessage}")
+                    }
+
+                    photoUrl = document?.getString(Constants.PHOTO_URL)
+                }
+        }
     }
 
 }

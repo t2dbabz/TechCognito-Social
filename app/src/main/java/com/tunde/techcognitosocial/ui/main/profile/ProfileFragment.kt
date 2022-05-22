@@ -28,6 +28,8 @@ class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
     private val viewModel: ProfileViewModel by activityViewModels()
     @Inject lateinit var firebaseAuth: FirebaseAuth
+    private var photoUrl: String? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -113,13 +115,16 @@ class ProfileFragment : Fragment() {
         }
 
         binding.addNewPostFab.setOnClickListener {
-            findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToAddPostFragment())
+            findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToAddPostFragment(photoUrl))
         }
     }
 
     private fun bindUserData(user: User) {
-        if (user.photoUrl != null) {
-            binding.userProfilePicImageView.load(user.photoUrl)
+        photoUrl = user.photoUrl
+
+        if (photoUrl != null) {
+
+            binding.userProfilePicImageView.load(photoUrl)
         } else {
 
             binding.userProfilePicImageView.load(Constants.getProfileImageUrl(user.userId!!))

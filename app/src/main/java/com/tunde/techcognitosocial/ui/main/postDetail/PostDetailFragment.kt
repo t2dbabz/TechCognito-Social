@@ -42,6 +42,7 @@ class PostDetailFragment : Fragment() {
     private lateinit var commentAdapter: CommentAdapter
     private var selectedPostId = ""
     private lateinit var selectedPost: Post
+    private var  photoUrl: String? = null
 
     @Inject lateinit var firebaseAuth: FirebaseAuth
     @Inject lateinit var firebaseFirestore: FirebaseFirestore
@@ -154,7 +155,9 @@ class PostDetailFragment : Fragment() {
             findNavController().navigate(PostDetailFragmentDirections.actionPostDetailFragmentToAddCommentFragment(
                 selectedPost.authorId,
                 selectedPost.author?.username,
-                selectedPost.documentId
+                selectedPost.documentId,
+                photoUrl
+
             ))
         }
 
@@ -194,7 +197,7 @@ class PostDetailFragment : Fragment() {
                 if (exception != null) {
                     Log.e("Exception", "Could not retrieve Document : ${exception.localizedMessage}")
                 }
-                val photoUrl = document?.getString(PHOTO_URL)
+                 photoUrl = document?.getString(PHOTO_URL)
                 if (photoUrl != null) {
                     binding.userProfilePicImageView.load(photoUrl)
                 } else {

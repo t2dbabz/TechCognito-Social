@@ -19,12 +19,13 @@ import java.security.MessageDigest
 class PostAdapter(val onPostClicked: (Post) -> Unit): ListAdapter<Post, PostAdapter.PostViewHolder>(DiffCallback) {
 
     private var onLikeClickListener: ((Post, Int) -> Unit)? = null
-    private var onCommentClickListener: ((Post) -> Unit)? = null
+    private var onCommentClickListener: ((Post, String?) -> Unit)? = null
     private var onShareClickListener: ((Post )-> Unit)? = null
 
 
    inner class PostViewHolder(val binding: PostListItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(post: Post, position: Int) {
+            var photoUrl: String? = null
 
             binding.postTextView.text = post.postText
             binding.commentFullNameTextView.text = post.author?.fullName
@@ -37,7 +38,7 @@ class PostAdapter(val onPostClicked: (Post) -> Unit): ListAdapter<Post, PostAdap
                         Log.e("Exception", "Could not retrieve Document : ${exception.localizedMessage}")
                     }
 
-                    val photoUrl = document?.getString(Constants.PHOTO_URL)
+                     photoUrl = document?.getString(Constants.PHOTO_URL)
 
                     if (photoUrl != null) {
                         binding.userProfilePicImageView.load(photoUrl)
@@ -71,7 +72,7 @@ class PostAdapter(val onPostClicked: (Post) -> Unit): ListAdapter<Post, PostAdap
 
             binding.commentPostImageView.setOnClickListener {
                 onCommentClickListener?.let { onClick ->
-                    onClick(post)
+                    onClick(post, photoUrl)
                 }
             }
 
@@ -98,7 +99,7 @@ class PostAdapter(val onPostClicked: (Post) -> Unit): ListAdapter<Post, PostAdap
         onLikeClickListener = listener
     }
 
-    fun setOnCommentClickListener(listener: (Post) -> Unit) {
+    fun setOnCommentClickListener(listener: (Post, String?) -> Unit) {
         onCommentClickListener = listener
     }
 

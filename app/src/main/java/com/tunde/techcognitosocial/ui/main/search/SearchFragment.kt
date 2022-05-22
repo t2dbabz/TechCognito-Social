@@ -67,12 +67,17 @@ class SearchFragment : Fragment() {
             viewModel.toggleLike(post)
         }
 
-        adapter.setOnCommentClickListener { post ->
+        adapter.setOnCommentClickListener { post, photoUrl ->
             val postId = post.documentId
             val postAuthorUserName = post.author?.username
             val userID = firebaseAuth.currentUser?.uid
 
-            val action = SearchFragmentDirections.actionSearchFragmentToAddCommentFragment(userID, postAuthorUserName, postId)
+            val action = SearchFragmentDirections.actionSearchFragmentToAddCommentFragment(
+                userID,
+                postAuthorUserName,
+                postId,
+                photoUrl
+            )
             findNavController().navigate(action)
         }
 
