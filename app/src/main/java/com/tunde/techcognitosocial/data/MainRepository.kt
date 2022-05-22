@@ -3,10 +3,10 @@ package com.tunde.techcognitosocial.data
 import android.net.Uri
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.storage.FirebaseStorage
 import com.tunde.techcognitosocial.model.Comment
 import com.tunde.techcognitosocial.model.Post
@@ -235,16 +235,21 @@ class MainRepository @Inject constructor(
         return@withContext try {
 
 
-            val currentUserId =  firebaseAuth.currentUser?.uid
-            val photoUploadResult = firebaseStorage.getReference(currentUserId!!).putFile(imageUri).await()
+            val currentUser =  firebaseAuth.currentUser
+            val photoUploadResult = firebaseStorage.getReference(currentUser?.uid!!).putFile(imageUri).await()
 
             val photoUrl = photoUploadResult.metadata?.reference?.downloadUrl?.await().toString()
 
+            val profileUpdates = userProfileChangeRequest {
+                photoUri = Uri.parse(photoUrl)
+            }
+
+            currentUser.updateProfile(profileUpdates).await()
+
             Log.e("PhotoUrl", photoUrl)
 
-
             fireBaseFirestore.runTransaction { transaction->
-                val userRef = fireBaseFirestore.collection(USERS_REF).document(currentUserId)
+                val userRef = fireBaseFirestore.collection(USERS_REF).document(currentUser.uid)
 
                 transaction.update(userRef, PHOTO_URL, photoUrl)
 

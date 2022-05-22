@@ -1,8 +1,10 @@
 package com.tunde.techcognitosocial.data
 
+import android.net.Uri
 import android.util.Log
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.tunde.techcognitosocial.model.User
@@ -69,6 +71,7 @@ class AuthRepository @Inject constructor(
     suspend fun createUserInFireStore(user: User) {
         withContext(Dispatchers.IO){
             try {
+                val currentUser = firebaseAuth.currentUser
                 val data = mapOf(
                     USER_ID to user.userId,
                     USERNAME to user.username,
@@ -82,6 +85,13 @@ class AuthRepository @Inject constructor(
                     FOLLOWERS to user.followers
                 )
                 fireBaseFirestore.collection(USERS_REF).document(user.userId!!).set(data).await()
+
+                val profileUpdates = userProfileChangeRequest {
+                     displayName = user.username
+                }
+
+                currentUser?.updateProfile(profileUpdates)?.await()
+
             } catch (e: Exception) {
                 Log.e("Exception", "Could not create user in database:${e.localizedMessage}")
             }
